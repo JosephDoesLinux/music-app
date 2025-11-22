@@ -6,7 +6,7 @@ import Home from './components/Home.jsx'
 import Library from './components/Library.jsx'
 import { Route, Routes } from 'react-router-dom'
 import About from './components/About.jsx'
-
+import Footer from './components/Footer.jsx'
 
 function App() {
 
@@ -20,7 +20,7 @@ function App() {
         <Route path="/library" Component={Library} />
 
       </Routes>
-      <h1>Hi</h1>
+      <Footer />
     </div>
   )
 }

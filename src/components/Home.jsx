@@ -4,7 +4,7 @@ import background from "../assets/background.png";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-yellow-50 relative flex flex-col items-center justify-start">
+    <div className=" bg-yellow-50 relative flex flex-col items-center justify-start">
       
       <img 
         src={background} 
@@ -12,7 +12,7 @@ export default function Home() {
         className="mt-15 left-0 w-full opacity-90"
       />
 
-      <div className="relative w-full max-w-4xl flex flex-col items-center text-center px-4 pt-10">
+      <div className="relative w-full max-w-4xl flex flex-col items-center text-center px-4">
 
         <h1 
           dir="rtl" 
