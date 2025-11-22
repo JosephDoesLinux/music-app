@@ -12,7 +12,7 @@ export default function Home() {
         className="mt-15 left-0 w-full opacity-90"
       />
 
-      <div className="relative w-full max-w-4xl flex flex-col items-center text-center px-4">
+      <div className="relative min-h-scree w-full max-w-4xl flex flex-col items-center text-center px-4">
 
         <h1 
           dir="rtl" 
@@ -43,7 +43,7 @@ export default function Home() {
               transition
             "
           >
-            START LISTENING
+            BROWSE MUSIC
           </Link>
         </div>
 
