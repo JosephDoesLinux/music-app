@@ -19,7 +19,7 @@ export default function Navbar() {
       {/* This main div holds the primary content and is relative for the dropdown */}
       <div className="flex justify-between items-center w-full relative">
         
-        <div className="flex items-center md:flex-grow-0">
+        <div className="flex items-center md:grow-0">
             
             {/* Hamburger Menu: SQUARE corners, Green background */}
             <button 
