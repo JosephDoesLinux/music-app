@@ -68,7 +68,7 @@ export default function Navbar() {
             {/* Desktop Text Links */}
             <div className="hidden md:flex md:space-x-8 text-3xl underline-offset-4 underline decoration-black">
                 <Link to="/about" className="text-black hover:text-lime-600" onClick={close}>About</Link>
-                <Link to="/library" className="text-black hover:text-lime-600" onClick={close}>Contact</Link>
+                <Link to="/contact" className="text-black hover:text-lime-600" onClick={close}>Contact</Link>
             </div>
             
             {/* Browse Button */}
@@ -91,7 +91,7 @@ export default function Navbar() {
       >
         {/* Dropdown Links */}
         <Link to="/about" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>About</Link>
-        <Link to="/library" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Contact us</Link>
+        <Link to="/contact" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Contact us</Link>
       </div>
     </nav>
   );
