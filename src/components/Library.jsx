@@ -48,7 +48,7 @@ export default function Library() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-yellow-50 p-4 sm:p-8 font-sans">
+    <div className="mt-15 min-h-screen bg-yellow-50 p-4 sm:p-8 font-sans">
       <header className="text-center mb-10 pt-4 pb-6">
         <h1 className="text-5xl sm:text-7xl font-black text-black leading-none tracking-tighter inline-block p-2 bg-lime-600 border-4 border-black shadow-[8px_8px_0_0_#000000]">
           ARABIC FUNK VINYL LIBRARY
