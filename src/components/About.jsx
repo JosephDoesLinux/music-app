@@ -1,17 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import heroImage from "../assets/about-hero.jpg";
 
 export default function About() {
   return (
     <div className="min-h-screen bg-yellow-50 relative flex flex-col items-center justify-start font-sans">
       <section
         className="relative w-full h-96 flex items-center justify-center mb-16"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
         <h1
