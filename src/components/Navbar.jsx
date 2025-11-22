@@ -8,7 +8,7 @@ export default function Navbar() {
   const close = () => setOpen(false);
 
   // Browse button: Solid Green background, Black border, Offset shadow
-  const browseBtnClasses = "text-black bg-lime-600 border border-black px-3 py-1 text-sm hover:bg-lime-400 transition whitespace-nowrap shadow-[3px_3px_0_0_#000000]";
+  const browseBtnClasses = "text-black bg-lime-600 border border-black px-4 py-6 text-xl hover:bg-lime-400 transition whitespace-nowrap shadow-[3px_3px_0_0_#000000]";
 
   // The URL of your logo image
 
@@ -43,8 +43,11 @@ export default function Navbar() {
                   h-8 sets a fixed height (adjust this for your preferred size). 
                   w-auto ensures the aspect ratio is maintained.
                 */}
-                <img src={logoUrl} alt="Music App Logo" className="h-20 w-auto" /> 
+                <img src={logoUrl} alt="Music App Logo" className="h-20 w-auto" />
+                <div className="text-6xl mb-2">|</div> 
+                            <div className="text-3xl mt-1">Habibi Funk <br /> Records</div>
             </Link>
+
         </div>
         
         {/* CENTER ELEMENT (The Logo on Mobile): IMAGE REPLACEMENT APPLIED */}
@@ -55,16 +58,17 @@ export default function Navbar() {
             onClick={close}
         >
             {/* Maintain Size: h-8 sets a fixed height, w-auto maintains aspect ratio. */}
-            <img src={logoUrl} alt="Music App Logo" className="h-15 w-auto" />
+            <img src={logoUrl} alt="Music App Logo" className="h-24 w-auto" />
+
         </Link>
 
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-8">
             
             {/* Desktop Text Links */}
-            <div className="hidden md:flex md:space-x-4">
+            <div className="hidden md:flex md:space-x-8 text-3xl underline-offset-4 underline decoration-black">
                 <Link to="/about" className="text-black hover:text-lime-600" onClick={close}>About</Link>
-                <Link to="/library" className="text-black hover:text-lime-600" onClick={close}>Library</Link>
+                <Link to="/library" className="text-black hover:text-lime-600" onClick={close}>Contact</Link>
             </div>
             
             {/* Browse Button */}
@@ -87,7 +91,7 @@ export default function Navbar() {
       >
         {/* Dropdown Links */}
         <Link to="/about" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>About</Link>
-        <Link to="/library" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Library</Link>
+        <Link to="/library" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Contact us</Link>
       </div>
     </nav>
   );
