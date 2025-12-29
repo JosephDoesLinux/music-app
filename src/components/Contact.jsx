@@ -1,7 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSuccess(false);
+    setIsError(false);
+    setFeedbackMsg("");
+
+    if (!name || !email || !message) {
+      setIsError(true);
+      setFeedbackMsg("All fields are required.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:5000/contact", {
+        name,
+        email,
+        message,
+      });
+
+      if (response.status === 201) {
+        setIsSuccess(true);
+        setFeedbackMsg("Message sent successfully!");
+        setName("");
+        setEmail("");
+        setMessage("");
+      }
+    } catch (err) {
+      console.error("Error sending message:", err);
+      setIsError(true);
+      setFeedbackMsg("Failed to send message. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-yellow-50 flex flex-col items-center font-sans p-4 sm:p-8">
       <section className="w-full max-w-6xl h-64 flex items-center justify-center mb-12 relative">
@@ -15,20 +57,38 @@ export default function Contact() {
           Get in Touch
         </h2>
 
-        <form className="flex flex-col gap-4">
+        {isSuccess && (
+          <div className="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 font-bold">
+            {feedbackMsg}
+          </div>
+        )}
+        
+        {isError && (
+          <div className="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold">
+            {feedbackMsg}
+          </div>
+        )}
+
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Your Name"
             className="p-4 border-2 border-black shadow-[4px_4px_0_0_#000000] focus:outline-none"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <input
             type="email"
             placeholder="Your Email"
             className="p-4 border-2 border-black shadow-[4px_4px_0_0_#000000] focus:outline-none"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <textarea
             placeholder="Your Message"
             className="p-4 border-2 border-black shadow-[4px_4px_0_0_#000000] focus:outline-none h-32 resize-none"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
           <button
             type="submit"
