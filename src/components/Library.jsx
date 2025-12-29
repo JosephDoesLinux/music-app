@@ -45,8 +45,8 @@ export default function Library() {
   const getAlbums = async () => {
     try {
       setIsLoading(true);
-      // Use the backend URL. For local dev it's localhost:5000.
-      const response = await axios.get("http://localhost:5000/albums");
+      // Use the backend URL from environment variables
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/albums`);
       if (response.status === 200) {
         setAlbums(response.data);
       }
