@@ -39,6 +39,7 @@ const AlbumCard = ({ album }) => {
 
 export default function Library() {
   const [albums, setAlbums] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -61,6 +62,11 @@ export default function Library() {
   useEffect(() => {
     getAlbums();
   }, []);
+
+  const filteredAlbums = albums.filter((album) =>
+    album.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    album.artist.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="mt-15 min-h-screen bg-yellow-50 p-4 sm:p-8 font-sans">
@@ -86,11 +92,23 @@ export default function Library() {
         )}
 
         {!isLoading && !isError && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 sm:gap-8">
-            {albums.map((album, index) => (
-              <AlbumCard key={index} album={album} />
-            ))}
-          </div>
+          <>
+            <div className="mb-8">
+              <input
+                type="text"
+                placeholder="SEARCH ALBUMS OR ARTISTS..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full p-4 border-4 border-black shadow-[8px_8px_0_0_#000000] focus:outline-none text-xl font-bold placeholder-gray-500 uppercase bg-white"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 sm:gap-8">
+              {filteredAlbums.map((album, index) => (
+                <AlbumCard key={index} album={album} />
+              ))}
+            </div>
+          </>
         )}
       </main>
 
