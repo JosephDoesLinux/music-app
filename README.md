@@ -1,24 +1,4 @@
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-While this project uses React, Vite supports many popular JS frameworks. [See all the supported frameworks](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
-
-## Deploy Your Own
-
-Deploy your own Vite project with Vercel.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/vite-react&template=vite-react)
-
-_Live Example: https://vite-react-example.vercel.app_
-
-### Deploying From Your Terminal
-
-You can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
-
-```shell
-$ vercel
-```
+# React +  Vite
 
 # Habibi Punk – Arabic Funk Music Web App
 
@@ -37,8 +17,9 @@ It is a music discovery platform that allows users to explore, browse, and learn
 
 ## Technologies Used
 - **Frontend:** ReactJS, Tailwind CSS
+- **Backend:** NodeJS, PostgreSQL
 - **Version Control:** Git & GitHub
-- **Deployment:** Vercel
+- **Deployment:** Render
 - **Extra info** Scraped song list from bandcamp using a python script and inspect element.
 
 ---
@@ -49,23 +30,50 @@ It is a music discovery platform that allows users to explore, browse, and learn
 ```bash
 git clone https://github.com/JosephDoesLinux/music-app.git
 ```
-Then run npm install => npm run dev. Done!
+Then run: 
+```bash
+npm install => npm run dev
+```
+
+---
+2. **Clone the backend!**
+```bash
+git clone https://github.com/JosephDoesLinux/music-backend.git
+```
+Then run: 
+```bash
+npm install => npm start
+```
 
 ---
 
 ## Screenshots
 
 ### Home Page
-![Home Screenshot](src/assets/screenshots/home.png)
+<details>
+  <summary>📸 Click to view Home Page</summary>
+  <br>
+  <img src="src/assets/screenshots/home.png" alt="Home Screenshot" width="100%">
+</details>
 
 ### Library Page
-![Library Screenshot](src/assets/screenshots/library.png)
+<details>
+  <summary>📸 Click to view Library Page</summary>
+  <br>
+  <img src="src/assets/screenshots/library.png" alt="Library Screenshot" width="100%">
+</details>
 
+### Admin Page (CRUD)
+<details>
+  <summary>📸 Click to view Admin Page</summary>
+  <br>
+  <img src="src/assets/screenshots/admin.png" alt="Admin Screenshot" width="100%">
+</details>
 ---
 
 ## Live Demo
 
-Check out the live project at: https://music-app-eosin-nine.vercel.app/
+Check out the live project at: [music-app-eosin-nine.vercel.app/](https://music-app-wark.onrender.com)
 
 ---
 
