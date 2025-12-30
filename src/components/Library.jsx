@@ -118,6 +118,9 @@ export default function Library() {
     album.artist.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const favoriteAlbumsList = filteredAlbums.filter(album => favorites.includes(album.id));
+  const nonFavoriteAlbumsList = filteredAlbums.filter(album => !favorites.includes(album.id));
+
   return (
     <div className="mt-15 min-h-screen bg-yellow-50 p-4 sm:p-8 font-sans">
       <header className="text-center mb-10 pt-4 pb-6">
@@ -153,12 +156,31 @@ export default function Library() {
               />
             </div>
 
+            {favoriteAlbumsList.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-3xl font-black mb-6 uppercase border-b-4 border-black inline-block pb-1">
+                  Your Favorites
+                </h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 sm:gap-8 mb-8">
+                  {favoriteAlbumsList.map((album) => (
+                    <AlbumCard 
+                      key={`fav-${album.id}`} 
+                      album={album} 
+                      isFavorite={true}
+                      onToggleFavorite={toggleFavorite}
+                    />
+                  ))}
+                </div>
+                <hr className="border-t-4 border-black" />
+              </div>
+            )}
+
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 sm:gap-8">
-              {filteredAlbums.map((album, index) => (
+              {nonFavoriteAlbumsList.map((album, index) => (
                 <AlbumCard 
                   key={index} 
                   album={album} 
-                  isFavorite={favorites.includes(album.id)}
+                  isFavorite={false}
                   onToggleFavorite={toggleFavorite}
                 />
               ))}

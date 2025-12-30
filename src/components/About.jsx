@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-yellow-50 relative flex flex-col items-center justify-start font-sans">
+    <div className="min-h-screen bg-yellow-50 relative flex flex-col items-center justify-start font-sans top-10">
       <section
         className="relative w-full h-96 flex items-center justify-center mb-16"
       >
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
         <h1
-          className="relative text-6xl md:text-8xl font-black text-white text-center shadow-[4px_4px_0_0_#000000] px-4"
+          className="relative text-6xl md:text-6xl font-black text-white text-center shadow-[4px_4px_0_0_#000000] mx-4"
           dir="rtl"
         >
 "الڤانك العربي مش بس موسيقى… هيدي رحلة من بيروت للعالم، صوت كل واحد عندو قصة."
@@ -30,7 +30,7 @@ export default function About() {
     </p>
   </div>
 
-  <div className="flex-1">
+  <div className="flex-1 hidden md:block">
     <img
       src="https://f4.bcbits.com/img/0040899504_21.jpg"
       alt="Habibi Funk Inspiration"
