@@ -28,9 +28,12 @@ export default function AdminPanel() {
     if (!user || user.role !== "admin") {
       navigate("/login");
     } else {
-      fetchAlbums();
-      fetchMessages();
-      fetchUsers();
+      const loadData = async () => {
+        setIsLoading(true);
+        await Promise.all([fetchAlbums(), fetchMessages(), fetchUsers()]);
+        setIsLoading(false);
+      };
+      loadData();
     }
   }, [navigate]);
 
@@ -80,6 +83,7 @@ export default function AdminPanel() {
     }
 
     try {
+      setIsLoading(true);
       if (albumId) {
         // Update
         await axios.put(`${import.meta.env.VITE_API_URL}/albums/${albumId}`, {
@@ -106,18 +110,23 @@ export default function AdminPanel() {
       clearAlbumForm();
     } catch (err) {
       showError("Error saving album");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDeleteAlbum = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
+      setIsLoading(true);
       await axios.delete(`${import.meta.env.VITE_API_URL}/albums/${id}`);
       showSuccess("Album deleted");
       // Remove from local state without refetching
       setAlbums(prev => prev.filter(album => album.id !== id));
     } catch (err) {
       showError("Error deleting album");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -143,12 +152,15 @@ export default function AdminPanel() {
   const handleDeleteMessage = async (id) => {
     if (!window.confirm("Delete this message?")) return;
     try {
+      setIsLoading(true);
       await axios.delete(`${import.meta.env.VITE_API_URL}/contacts/${id}`);
       showSuccess("Message deleted");
       // Remove from local state without refetching
       setMessages(prev => prev.filter(msg => msg.id !== id));
     } catch (err) {
       showError("Error deleting message");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -158,6 +170,7 @@ export default function AdminPanel() {
     if (!window.confirm(`Are you sure you want to change ${user.username}'s role to ${newRole}?`)) return;
 
     try {
+      setIsLoading(true);
       await axios.put(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
         role: newRole
       });
@@ -171,18 +184,23 @@ export default function AdminPanel() {
       ));
     } catch (err) {
       showError("Error updating user role");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDeleteUser = async (id) => {
     if (!window.confirm("Delete this user? This will remove their favorites too.")) return;
     try {
+      setIsLoading(true);
       await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`);
       showSuccess("User deleted");
       // Remove from local state without refetching
       setUsers(prev => prev.filter(user => user.id !== id));
     } catch (err) {
       showError("Error deleting user");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -190,6 +208,13 @@ export default function AdminPanel() {
     <div className="min-h-screen bg-slate-100 p-4 sm:p-8 font-sans mt-20">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-black mb-8 uppercase">Admin Dashboard</h1>
+
+        {/* Loading */}
+        {isLoading && (
+          <div className="mb-6 p-4 border-l-4 font-bold bg-blue-100 border-blue-500 text-blue-700">
+            Loading...
+          </div>
+        )}
 
         {/* Feedback */}
         {feedback.msg && (
