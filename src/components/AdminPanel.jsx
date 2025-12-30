@@ -33,25 +33,36 @@ export default function AdminPanel() {
     if (!user || user.role !== "admin") {
       navigate("/login");
     } else {
-      fetchData();
+      fetchAlbums();
+      fetchMessages();
+      fetchUsers();
     }
   }, [navigate]);
 
-  const fetchData = async () => {
-    setIsLoading(true);
+  const fetchAlbums = async () => {
     try {
-      const [albumsRes, msgsRes, usersRes] = await Promise.all([
-        axios.get(`${import.meta.env.VITE_API_URL}/albums`),
-        axios.get(`${import.meta.env.VITE_API_URL}/contacts`),
-        axios.get(`${import.meta.env.VITE_API_URL}/users`),
-      ]);
-      setAlbums(albumsRes.data);
-      setMessages(msgsRes.data);
-      setUsers(usersRes.data);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/albums`);
+      setAlbums(res.data);
     } catch (err) {
       console.error(err);
-    } finally {
-      setIsLoading(false);
+    }
+  };
+
+  const fetchMessages = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/contacts`);
+      setMessages(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+      setUsers(res.data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -80,15 +91,24 @@ export default function AdminPanel() {
           title, artist, url, image_url: imageUrl
         });
         showSuccess("Album updated successfully");
+        
+        // Update local state without refetching
+        setAlbums(prev => prev.map(album => 
+          album.id === albumId 
+            ? { ...album, title, artist, url, image_url: imageUrl } 
+            : album
+        ));
       } else {
         // Create
-        await axios.post(`${import.meta.env.VITE_API_URL}/albums`, {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/albums`, {
           title, artist, url, image_url: imageUrl
         });
         showSuccess("Album created successfully");
+        
+        // Add to local state without refetching
+        setAlbums(prev => [...prev, res.data]);
       }
       clearAlbumForm();
-      fetchData();
     } catch (err) {
       showError("Error saving album");
     }
@@ -99,7 +119,8 @@ export default function AdminPanel() {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/albums/${id}`);
       showSuccess("Album deleted");
-      fetchData();
+      // Remove from local state without refetching
+      setAlbums(prev => prev.filter(album => album.id !== id));
     } catch (err) {
       showError("Error deleting album");
     }
@@ -129,7 +150,8 @@ export default function AdminPanel() {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/contacts/${id}`);
       showSuccess("Message deleted");
-      fetchData();
+      // Remove from local state without refetching
+      setMessages(prev => prev.filter(msg => msg.id !== id));
     } catch (err) {
       showError("Error deleting message");
     }
@@ -149,8 +171,15 @@ export default function AdminPanel() {
           username, role
         });
         showSuccess("User updated successfully");
+        
+        // Update local state without refetching
+        setUsers(prev => prev.map(user => 
+          user.id === userId 
+            ? { ...user, username, role } 
+            : user
+        ));
+        
         clearUserForm();
-        fetchData();
       } catch (err) {
         showError("Error updating user");
       }
@@ -162,7 +191,8 @@ export default function AdminPanel() {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`);
       showSuccess("User deleted");
-      fetchData();
+      // Remove from local state without refetching
+      setUsers(prev => prev.filter(user => user.id !== id));
     } catch (err) {
       showError("Error deleting user");
     }
