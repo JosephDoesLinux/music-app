@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const AlbumCard = ({ album }) => {
+const AlbumCard = ({ album, isFavorite, onToggleFavorite }) => {
   const handleImageError = (e) => {
     e.target.onerror = null;
     e.target.src = "https://placehold.co/300x300/1F2937/F3F4F6?text=NO+COVER";
   };
 
   return (
-    <div className="bg-white p-2 border-4 border-black shadow-[8px_8px_0_0_#000000] overflow-hidden">
+    <div className="bg-white p-2 border-4 border-black shadow-[8px_8px_0_0_#000000] overflow-hidden relative">
       <a href={album.url} target="_blank" rel="noopener noreferrer" className="block">
         <div className="relative aspect-square border-2 border-black">
           <img
@@ -33,15 +34,31 @@ const AlbumCard = ({ album }) => {
           </span>
         </div>
       </a>
+      
+      <button 
+        onClick={(e) => {
+          e.preventDefault();
+          onToggleFavorite(album.id);
+        }}
+        className={`absolute bottom-4 right-4 p-2 border-2 border-black shadow-[2px_2px_0_0_#000000] ${isFavorite ? 'bg-red-500 text-white' : 'bg-white text-gray-400'}`}
+        title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      </button>
     </div>
   );
 };
 
 export default function Library() {
   const [albums, setAlbums] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const getAlbums = async () => {
     try {
@@ -59,8 +76,41 @@ export default function Library() {
     }
   };
 
+  const getFavorites = async () => {
+    if (!user) return;
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/favorites/${user.id}`);
+      setFavorites(res.data); // Expecting array of album IDs e.g. [1, 5, 12]
+    } catch (err) {
+      console.error("Error fetching favorites:", err);
+    }
+  };
+
+  const toggleFavorite = async (albumId) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/favorites`, {
+        userId: user.id,
+        albumId
+      });
+      
+      if (res.data.action === "added") {
+        setFavorites([...favorites, albumId]);
+      } else {
+        setFavorites(favorites.filter(id => id !== albumId));
+      }
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+    }
+  };
+
   useEffect(() => {
     getAlbums();
+    getFavorites();
   }, []);
 
   const filteredAlbums = albums.filter((album) =>
@@ -105,7 +155,12 @@ export default function Library() {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 sm:gap-8">
               {filteredAlbums.map((album, index) => (
-                <AlbumCard key={index} album={album} />
+                <AlbumCard 
+                  key={index} 
+                  album={album} 
+                  isFavorite={favorites.includes(album.id)}
+                  onToggleFavorite={toggleFavorite}
+                />
               ))}
             </div>
           </>
