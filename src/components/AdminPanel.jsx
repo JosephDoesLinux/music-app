@@ -18,11 +18,6 @@ export default function AdminPanel() {
   const [url, setUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
-  // Form States (for Users)
-  const [userId, setUserId] = useState("");
-  const [username, setUsername] = useState("");
-  const [role, setRole] = useState("user");
-
   // UI States
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState({ type: "", msg: "" });
@@ -158,31 +153,24 @@ export default function AdminPanel() {
   };
 
   // --- USER ACTIONS ---
-  const handleSaveUser = async (e) => {
-    e.preventDefault();
-    if (!username || !role) {
-      showError("Username and role are required");
-      return;
-    }
-    // Only Update for now (Create is usually via Register)
-    if (userId) {
-      try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
-          username, role
-        });
-        showSuccess("User updated successfully");
-        
-        // Update local state without refetching
-        setUsers(prev => prev.map(user => 
-          user.id === userId 
-            ? { ...user, username, role } 
-            : user
-        ));
-        
-        clearUserForm();
-      } catch (err) {
-        showError("Error updating user");
-      }
+  const handleToggleRole = async (user) => {
+    const newRole = user.role === "admin" ? "user" : "admin";
+    if (!window.confirm(`Are you sure you want to change ${user.username}'s role to ${newRole}?`)) return;
+
+    try {
+      await axios.put(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
+        role: newRole
+      });
+      showSuccess(`User role updated to ${newRole}`);
+      
+      // Update local state without refetching
+      setUsers(prev => prev.map(u => 
+        u.id === user.id 
+          ? { ...u, role: newRole } 
+          : u
+      ));
+    } catch (err) {
+      showError("Error updating user role");
     }
   };
 
@@ -196,20 +184,6 @@ export default function AdminPanel() {
     } catch (err) {
       showError("Error deleting user");
     }
-  };
-
-  const editUser = (user) => {
-    setUserId(user.id);
-    setUsername(user.username);
-    setRole(user.role);
-    setActiveTab("users");
-    window.scrollTo(0, 0);
-  };
-
-  const clearUserForm = () => {
-    setUserId("");
-    setUsername("");
-    setRole("user");
   };
 
   return (
@@ -335,64 +309,41 @@ export default function AdminPanel() {
 
         {/* --- USERS TAB --- */}
         {activeTab === "users" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-             {/* Form */}
-             <div className="lg:col-span-1 bg-white p-6 border-4 border-black shadow-[8px_8px_0_0_#000000] h-fit">
-              <h2 className="text-2xl font-black mb-4 uppercase">Edit User</h2>
-              {!userId ? (
-                <p className="mb-4 font-bold text-gray-500">Select a user from the list to edit.</p>
-              ) : (
-                <form onSubmit={handleSaveUser} className="flex flex-col gap-4">
-                  <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" className="p-3 border-2 border-black font-bold" />
-                  <select value={role} onChange={e => setRole(e.target.value)} className="p-3 border-2 border-black font-bold bg-white">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                  
-                  <div className="flex gap-2 mt-2">
-                    <button type="submit" className="flex-1 bg-black text-white font-black py-3 hover:bg-gray-800 uppercase">
-                      Update User
-                    </button>
-                    <button type="button" onClick={clearUserForm} className="px-4 bg-gray-200 text-black font-black border-2 border-black hover:bg-gray-300 uppercase">
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-
-            {/* List */}
-            <div className="lg:col-span-2 bg-white p-6 border-4 border-black shadow-[8px_8px_0_0_#000000]">
-              <h2 className="text-2xl font-black mb-4 uppercase">Users ({users.length})</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b-4 border-black">
-                      <th className="p-2 font-black uppercase">ID</th>
-                      <th className="p-2 font-black uppercase">Username</th>
-                      <th className="p-2 font-black uppercase">Role</th>
-                      <th className="p-2 font-black uppercase">Actions</th>
+          <div className="bg-white p-6 border-4 border-black shadow-[8px_8px_0_0_#000000]">
+            <h2 className="text-2xl font-black mb-4 uppercase">Users ({users.length})</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b-4 border-black">
+                    <th className="p-2 font-black uppercase">ID</th>
+                    <th className="p-2 font-black uppercase">Username</th>
+                    <th className="p-2 font-black uppercase">Role</th>
+                    <th className="p-2 font-black uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map(user => (
+                    <tr key={user.id} className="border-b border-gray-300 hover:bg-yellow-50">
+                      <td className="p-2 font-bold">{user.id}</td>
+                      <td className="p-2 font-bold">{user.username}</td>
+                      <td className="p-2">
+                        <span className={`px-2 py-1 text-xs font-black uppercase text-white ${user.role === 'admin' ? 'bg-purple-600' : 'bg-gray-500'}`}>
+                          {user.role}
+                        </span>
+                      </td>
+                      <td className="p-2 flex gap-2">
+                        <button 
+                          onClick={() => handleToggleRole(user)} 
+                          className={`font-black hover:underline uppercase ${user.role === 'admin' ? 'text-orange-600' : 'text-blue-600'}`}
+                        >
+                          {user.role === 'admin' ? 'Demote' : 'Promote'}
+                        </button>
+                        <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 font-black hover:underline uppercase">Delete</button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {users.map(user => (
-                      <tr key={user.id} className="border-b border-gray-300 hover:bg-yellow-50">
-                        <td className="p-2 font-bold">{user.id}</td>
-                        <td className="p-2 font-bold">{user.username}</td>
-                        <td className="p-2">
-                          <span className={`px-2 py-1 text-xs font-black uppercase text-white ${user.role === 'admin' ? 'bg-purple-600' : 'bg-gray-500'}`}>
-                            {user.role}
-                          </span>
-                        </td>
-                        <td className="p-2 flex gap-2">
-                          <button onClick={() => editUser(user)} className="text-blue-600 font-black hover:underline uppercase">Edit</button>
-                          <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 font-black hover:underline uppercase">Delete</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

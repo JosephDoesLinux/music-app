@@ -9,6 +9,7 @@ import About from './components/About.jsx'
 import Footer from './components/Footer.jsx'
 import Contact from './components/Contact.jsx'
 import Login from './components/Login.jsx'
+import SignUp from './components/SignUp.jsx'
 import AdminPanel from './components/AdminPanel.jsx'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/library" Component={Library} />
         <Route path="/contact" Component={Contact} />
         <Route path="/login" Component={Login} />
+        <Route path="/signup" Component={SignUp} />
         <Route path="/admin" Component={AdminPanel} />
       </Routes>
       <Footer />

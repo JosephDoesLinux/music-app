@@ -86,7 +86,10 @@ export default function Navbar() {
                 {user ? (
                   <button onClick={handleLogout} className="text-black hover:text-red-600">Logout</button>
                 ) : (
-                  <Link to="/login" className="text-black hover:text-lime-600" onClick={close}>Login</Link>
+                  <>
+                    <Link to="/login" className="text-black hover:text-lime-600" onClick={close}>Login</Link>
+                    <Link to="/signup" className="text-black hover:text-lime-600" onClick={close}>Sign Up</Link>
+                  </>
                 )}
             </div>
             
@@ -110,7 +113,7 @@ export default function Navbar() {
           
 
         <Link to="/about" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>About</Link>
-        <Link to="/contact" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Contact us</Link>
+        <Link to="/contact" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Contact</Link>
         
         {isAdmin && (
            <Link to="/admin" className="text-purple-300 font-bold hover:text-purple-100 w-full text-center py-2" onClick={close}>Admin</Link>
@@ -119,7 +122,10 @@ export default function Navbar() {
         {user ? (
            <button onClick={handleLogout} className="text-red-300 hover:text-red-100 w-full text-center py-2">Logout</button>
         ) : (
-           <Link to="/login" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Login</Link>
+           <>
+             <Link to="/login" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Login</Link>
+             <Link to="/signup" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Sign Up</Link>
+           </>
         )}
 
       
