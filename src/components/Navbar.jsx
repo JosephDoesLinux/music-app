@@ -1,15 +1,30 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logoUrl from "../assets/logo.webp"; // Ensure you have a logo image in the specified path
-
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const close = () => setOpen(false);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+  }, [location]); // Re-check user on route change (e.g. after login)
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+    close();
+  };
 
   const browseBtnClasses = "text-black bg-lime-600 border border-black px-4 py-6 text-xl hover:bg-lime-400 transition whitespace-nowrap shadow-[3px_3px_0_0_#000000]";
 
-
+  const isAdmin = user && user.role === "admin";
 
   return (
     // Navbar Background: Yellow, Fixed with the offset shadow and gap
@@ -21,7 +36,7 @@ export default function Navbar() {
 
             {/* here is button */}
             <button 
-              className="text-black bg-lime-600 p-2 shadow-[3px_3px_0_0_#000000] border-2 border-black md:hidden mr-2" 
+              className="text-black bg-lime-600 p-2 shadow-[3px_3px_0_0_#000000] border-2 border-black lg:hidden mr-2" 
               onClick={() => setOpen(!open)}
               aria-label="Toggle Navigation"
             >
@@ -32,8 +47,7 @@ export default function Navbar() {
 
             <Link 
                 to="/" 
-
-                className="text-black hidden md:flex items-center space-x-2" 
+                className="text-black hidden lg:flex items-center space-x-2" 
                 onClick={close}
             >
                 {/* Maintain Size: 
@@ -50,7 +64,7 @@ export default function Navbar() {
         <Link 
             to="/" 
             // Removed redundant text-2xl font-bold classes as the sizing is now based on the image
-            className="text-black md:hidden absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2" 
+            className="text-black lg:hidden absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2" 
             onClick={close}
         >
             {/* Maintain Size: h-8 sets a fixed height, w-auto maintains aspect ratio. */}
@@ -61,9 +75,19 @@ export default function Navbar() {
 
         <div className="flex items-center space-x-8">
 
-            <div className="hidden md:flex md:space-x-8 text-3xl underline-offset-4 underline decoration-black">
+            <div className="hidden lg:flex lg:space-x-8 text-3xl underline-offset-4 underline decoration-black">
                 <Link to="/about" className="text-black hover:text-lime-600" onClick={close}>About</Link>
                 <Link to="/contact" className="text-black hover:text-lime-600" onClick={close}>Contact</Link>
+                
+                {isAdmin && (
+                  <Link to="/admin" className="text-purple-700 font-bold hover:text-purple-900" onClick={close}>Admin</Link>
+                )}
+
+                {user ? (
+                  <button onClick={handleLogout} className="text-black hover:text-red-600">Logout</button>
+                ) : (
+                  <Link to="/login" className="text-black hover:text-lime-600" onClick={close}>Login</Link>
+                )}
             </div>
             
 
@@ -76,7 +100,7 @@ export default function Navbar() {
       <div 
         className={`
           ${open ? 'block' : 'hidden'} 
-          md:hidden 
+          lg:hidden 
           absolute top-[110%] left-0 right-0 
           bg-lime-900 p-4 
           shadow-[5px_5px_0_0_#000000] border-2 border-black
@@ -87,6 +111,17 @@ export default function Navbar() {
 
         <Link to="/about" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>About</Link>
         <Link to="/contact" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Contact us</Link>
+        
+        {isAdmin && (
+           <Link to="/admin" className="text-purple-300 font-bold hover:text-purple-100 w-full text-center py-2" onClick={close}>Admin</Link>
+        )}
+
+        {user ? (
+           <button onClick={handleLogout} className="text-red-300 hover:text-red-100 w-full text-center py-2">Logout</button>
+        ) : (
+           <Link to="/login" className="text-yellow-200 hover:text-lime-400 w-full text-center py-2" onClick={close}>Login</Link>
+        )}
+
       
       
       </div>
