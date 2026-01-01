@@ -73,7 +73,7 @@ npm install => npm start
 
 ## Live Demo
 
-Check out the live project at: [music-app-eosin-nine.vercel.app/](https://music-app-wark.onrender.com)
+  Check out the live project at: [music-app-wark.onrender.com](https://music-app-wark.onrender.com/)
 
 ---
 
